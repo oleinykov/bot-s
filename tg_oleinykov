@@ -1,0 +1,33 @@
+import telegram
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+# Функция для обработки команды /start
+def start(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text="Привет! Я эхо-бот. Отправь мне сообщение, и я отправлю его тебе обратно.")
+
+# Функция для обработки сообщений
+def echo(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text=update.message.text)
+
+# Основная функция
+def main():
+    # Создаем объект бота и передаем ему API-ключ
+    bot = telegram.Bot(token='6125907916:AAE0F58Yb6ESJqOPkhfn8p_3hKgTCA8v_o4')
+
+    # Создаем объект Updater и передаем ему API-ключ и настройки прокси (если нужно)
+    updater = Updater(token='6125907916:AAE0F58Yb6ESJqOPkhfn8p_3hKgTCA8v_o4', use_context=True)
+
+    # Получаем объект диспетчера и регистрируем обработчики команд и сообщений
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+    # Запускаем бота
+    updater.start_polling()
+
+    # Останавливаем бота при получении сигнала остановки
+    updater.idle()
+
+# Вызываем основную функцию
+if __name__ == '__main__':
+    main()
